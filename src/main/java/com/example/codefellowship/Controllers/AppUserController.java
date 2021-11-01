@@ -5,6 +5,9 @@ import com.example.codefellowship.Model.Post;
 import com.example.codefellowship.Repositories.AppUserRepository;
 import com.example.codefellowship.Repositories.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -34,10 +38,12 @@ public class AppUserController {
     }
 
     @PostMapping("/signup")
-    public String signUpUser(@RequestParam String username, @RequestParam String password,@RequestParam String firstName,@RequestParam String lastName,@RequestParam String dateOfBirth,@RequestParam String bio){
-        AppUser appUser = new AppUser(username, encoder.encode(password),firstName,lastName,dateOfBirth,bio);
+    public RedirectView signUpUser(@RequestParam String username, @RequestParam String password,@RequestParam String firstName,@RequestParam String lastName,@RequestParam String dateOfBirth,@RequestParam String bio){
+        AppUser appUser = new AppUser(username, encoder.encode(password),firstName,lastName,dateOfBirth,bio,"ROLE_USER");
         appUserRepository.save(appUser);
-        return "login";
+        Authentication authentication = new UsernamePasswordAuthenticationToken(appUser, null, new ArrayList<>());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return new RedirectView("/");
     }
 
     @GetMapping("/login")
@@ -54,7 +60,9 @@ public class AppUserController {
         return "index";
     }
     @GetMapping("/user/{user}")
-    public String userPage(@PathVariable AppUser user,Model model){
+    public String userPage(@PathVariable AppUser user,Model model,Principal principal){
+        AppUser authUser=appUserRepository.findByUsername(principal.getName());
+        model.addAttribute("authUser",authUser);
         model.addAttribute("user",user);
         return "user";
     }

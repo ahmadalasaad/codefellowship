@@ -1,9 +1,11 @@
 package com.example.codefellowship.Model;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -19,18 +21,20 @@ public class AppUser implements UserDetails {
     private String lastName;
     private String dateOfBirth;
     private String bio;
+    private String authority;
     @OneToMany(mappedBy = "appUser")
     private List<Post> posts;
 
     public AppUser(){}
 
-    public AppUser(String username, String password, String firstName, String lastName, String dateOfBirth, String bio) {
+    public AppUser(String username, String password, String firstName, String lastName, String dateOfBirth, String bio,String authority) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.bio = bio;
+        this.authority=authority;
     }
 //    public AppUser(String username, String password) {
 //        this.username = username;
@@ -38,7 +42,10 @@ public class AppUser implements UserDetails {
 //    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        SimpleGrantedAuthority simpleGrantedAuthority=new SimpleGrantedAuthority(authority);
+        List<SimpleGrantedAuthority> grantedAuthorities=new ArrayList<SimpleGrantedAuthority>();
+        grantedAuthorities.add(simpleGrantedAuthority);
+        return grantedAuthorities;
     }
 
     @Override

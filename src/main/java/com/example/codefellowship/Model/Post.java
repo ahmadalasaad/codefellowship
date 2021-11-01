@@ -1,7 +1,11 @@
 package com.example.codefellowship.Model;
 
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
+import java.security.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 public class Post {
@@ -10,7 +14,8 @@ public class Post {
     private Integer id;
 
     private String post;
-
+    @CreationTimestamp
+    private LocalDateTime createDateTime;
     @ManyToOne
     public AppUser appUser;
 
@@ -43,5 +48,13 @@ public class Post {
 
     public void setAppUser(AppUser appUser) {
         this.appUser = appUser;
+    }
+
+    public LocalDateTime getCreateDateTime() {
+        return createDateTime;
+    }
+
+    public void setCreateDateTime(LocalDateTime createDateTime) {
+        this.createDateTime = createDateTime;
     }
 }

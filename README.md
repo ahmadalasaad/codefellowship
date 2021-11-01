@@ -6,6 +6,9 @@
 * login page contain form allow user to login to the site
 * singup page contain the form allow user to add his info and create account in the website
 
+
+* auto login
+* click in any user to see his profile
 ## data bases
 
 * Appuser contain the user are assigned to the website
