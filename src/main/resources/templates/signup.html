@@ -11,23 +11,25 @@
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 </head>
 <body>
-<header>
-    <ul>
-        <li>
-            <a href="/">Home</a>
-        </li>
-        <li>
-            <a th:if="${user==null}" th:href="${'/login'}">Login</a>
-            <a th:if="${user}" th:href="${'/perform_logout'}">logout</a>
-        </li>
+<nav class="navbar navbar-dark bg-dark">
+    <!-- Navbar content -->
 
-        <li>
-            <a th:if="${user}" th:href="${'/user/'+user}">user</a>
+    <ul class="nav">
+        <li class="nav-item">
+            <a href="/" class="nav-link active">Home</a>
         </li>
-        <li>
+        <li class="nav-item">
+            <a th:if="${user==null}" th:href="${'/login'}" class="nav-link active">Login</a>
+            <a th:if="${user}" th:href="${'/perform_logout'}" class="nav-link active">Logout</a>
+        </li>
+        <li class="nav-item">
+            <a th:if="${user}" th:href="${'/user/'+user}" class="nav-link active">Profile</a>
+        </li>
+        <li class="nav-item">
             <h2 th:if="${user}" th:text="${user.getUsername()}"></h2>
         </li>
     </ul>
+</nav>
 </header>
 
 <div class="mb-3">
