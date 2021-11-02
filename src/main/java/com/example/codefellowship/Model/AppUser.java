@@ -25,6 +25,16 @@ public class AppUser implements UserDetails {
     @OneToMany(mappedBy = "appUser")
     private List<Post> posts;
 
+    @ManyToMany
+    @JoinTable(
+            name="user_followers",
+            joinColumns = { @JoinColumn(name = "primaryUser") },
+            inverseJoinColumns = { @JoinColumn(name = "followedUser") }
+    )
+    public List<AppUser> followers;
+
+    @ManyToMany(mappedBy = "followers")
+    public List<AppUser> usersFollowedBy;
     public AppUser(){}
 
     public AppUser(String username, String password, String firstName, String lastName, String dateOfBirth, String bio,String authority) {
@@ -101,7 +111,13 @@ public class AppUser implements UserDetails {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+    public void addFollower(AppUser follower) {
+        this.followers.add(follower);
+    }
 
+    public void removeFollower(AppUser follower) {
+        this.followers.remove(follower);
+    }
     public String getDateOfBirth() {
         return dateOfBirth;
     }

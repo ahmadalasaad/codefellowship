@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-dark bg-dark">
+        <!-- Navbar content -->
+
+        <ul class="nav">
+            <li class="nav-item">
+                <a href="/" class="nav-link active">Home</a>
+            </li>
+            <li class="nav-item">
+                <a th:if="${authUser==null}" th:href="${'/login'}" class="nav-link active">Login</a>
+                <a th:if="${authUser}" th:href="${'/perform_logout'}" class="nav-link active">Logout</a>
+            </li>
+            <li class="nav-item">
+                <a th:if="${authUser}" th:href="${'/user/'+authUser}" class="nav-link active">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a th:if="${authUser}" th:href="${'/feed/'+authUser}" class="nav-link active">Feed</a>
+            </li>
+            <li class="nav-item">
+                <h2 th:if="${authUser}" th:text="${authUser.getUsername()}"></h2>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+
+<h2> following posts</h2>
+<div th:each="user:${authUser.followers}">
+    <div th:each="post:${user.getPosts()}" class="card" style="width: 18rem;" >
+        <a th:href="${'/user/'+post.getAppUser().getId()}">  <P th:text="${post.getAppUser().getUsername()}" class="card-title"></P></a>
+        <p th:text="${post.getPost()}"  class="card-title"></p>
+        <p th:text="${post.getCreateDateTime()}" class="card-title"></p>
+    </div>
+</div>
+
+</body>
+</html>
