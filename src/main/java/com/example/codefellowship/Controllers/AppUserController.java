@@ -63,6 +63,7 @@ public class AppUserController {
     public String userPage(@PathVariable AppUser user,Model model,Principal principal){
         AppUser authUser=appUserRepository.findByUsername(principal.getName());
         model.addAttribute("authUser",authUser);
+
         model.addAttribute("user",user);
         return "user";
     }
@@ -73,5 +74,24 @@ public class AppUserController {
         postRepository.save(post1);
         return new RedirectView("/user/"+user.getId());
     }
-
+    @PostMapping("/user/follow")
+    public RedirectView addFollower(int followedUser, Principal p) {
+        AppUser primaryUser = appUserRepository.findByUsername(p.getName());
+        primaryUser.addFollower(appUserRepository.findById(followedUser).get());
+        appUserRepository.save(primaryUser);
+        return new RedirectView("/user/"+followedUser);
+    }
+    @PostMapping("/users/unfollow")
+    public RedirectView removeFollower(int unfollowedUser, Principal p) {
+        AppUser primaryUser = appUserRepository.findByUsername(p.getName());
+        primaryUser.removeFollower(appUserRepository.findById(unfollowedUser).get());
+        appUserRepository.save(primaryUser);
+        return new RedirectView("/user/"+unfollowedUser);
+    }
+    @GetMapping("/feed/{user}")
+    public String feed(Model model,Principal principal){
+        AppUser authUser=appUserRepository.findByUsername(principal.getName());
+        model.addAttribute("authUser",authUser);
+        return "feed";
+    }
 }
